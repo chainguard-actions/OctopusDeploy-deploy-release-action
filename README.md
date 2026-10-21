@@ -1,18 +1,112 @@
-# OctopusDeploy/deploy-release-action
+# deploy-release-action
 
-GitHub Action to deploy a release in Octopus Deploy
+<img alt= "" src="https://github.com/OctopusDeploy/deploy-release-action/raw/main/assets/github-actions-octopus.png" />
 
-Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/OctopusDeploy/deploy-release-action](https://github.com/OctopusDeploy/deploy-release-action).
+This is a GitHub Action to deploy a release in [Octopus Deploy](https://octopus.com/).
 
-## Versions
+> [!IMPORTANT]
+> As of **v3** of this action, Octopus Server version `2022.3.5512` or newer is required.
 
-| Version | Tag | Upstream commit |
-|---------|-----|-----------------|
-| v4.2.2 | [`v4.2.2`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/tree/v4.2.2) | [`eb8a56e`](https://github.com/OctopusDeploy/deploy-release-action/commit/eb8a56e05384f6741ee318b660ad5ebaffbd2382) |
-| v4.2.3 | [`v4.2.3`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/tree/v4.2.3) | [`a7630b7`](https://github.com/OctopusDeploy/deploy-release-action/commit/a7630b7e2d308f6dec4339fdcd4b6a79b978380e) |
-| v4.2.4 | [`v4.2.4`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/tree/v4.2.4) | [`555ae5a`](https://github.com/OctopusDeploy/deploy-release-action/commit/555ae5a572e959b3d8f860246e1f6428de2c4da0) |
-| v4.2.5 | [`v4.2.5`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/tree/v4.2.5) | [`aa8dcdd`](https://github.com/OctopusDeploy/deploy-release-action/commit/aa8dcddeec810ce58cdf282a72738a8ed8ed65fd) |
-| v4.2.6 | [`v4.2.6`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/tree/v4.2.6) | [`bc32326`](https://github.com/OctopusDeploy/deploy-release-action/commit/bc3232647d211396a7d81d82b8098da0635c182a) |
+## Deployments in Octopus Deploy
+
+A release is a snapshot of the deployment process and the associated assets (packages, scripts, variables) as they existed when the release was created. The release is given a version number, and you can deploy that release as many times as you need to, even if parts of the deployment process have changed since the release was created (those changes will be included in future releases but not in this version).
+
+When you deploy the release, you are executing the deployment process with all the associated details, as they existed when the release was created.
+
+More information about releases and deployments in Octopus Deploy:
+
+- [Releases](https://octopus.com/docs/releases)
+- [Deployments](https://octopus.com/docs/deployments)
+
+## Examples
+
+Incorporate the following actions in your workflow to deploy a release in Octopus Deploy using an API key, a target instance (i.e. `server`), and a project:
+
+```yml
+env:
+
+steps:
+  # ...
+  - name: Deploy a release in Octopus Deploy 🐙
+    id: deploy_a_release_in_octopus_deploy
+    uses: OctopusDeploy/deploy-release-action@v4
+    env:
+      OCTOPUS_API_KEY: ${{ secrets.API_KEY  }}
+      OCTOPUS_URL: ${{ secrets.SERVER }}
+      OCTOPUS_SPACE: 'Outer Space'
+    with:
+      project: 'MyProject'
+      release_number: '1.0.0'
+      environments: |
+        Dev
+        Test
+      variables: |
+        Foo: Bar
+        Fizz: Buzz
+```
+
+Deploy a release created from the [Create a Release](https://github.com/marketplace/actions/create-release-in-octopus-deploy) action
+
+```yml
+env:
+  OCTOPUS_API_KEY: ${{ secrets.API_KEY  }}
+  OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
+  OCTOPUS_SPACE: 'Outer Space'
+steps:
+  # ...
+  - name: Create a release in Octopus Deploy 🐙
+    id: create_a_release_in_octopus_deploy
+    uses: OctopusDeploy/create-release-action@v4
+    with:
+      project: 'MyProject'
+  - name: Deploy a release in Octopus Deploy 🐙
+    id: deploy_a_release_in_octopus_deploy
+    uses: OctopusDeploy/deploy-release-action@v4
+    env:
+      OCTOPUS_API_KEY: ${{ secrets.API_KEY  }}
+      OCTOPUS_URL: ${{ secrets.SERVER }}
+      OCTOPUS_SPACE: 'Outer Space'
+    with:
+      project: 'MyProject'
+      release_number: ${{ steps.create_a_release_in_octopus_deploy.outputs.release_number }}
+      environments: |
+        Dev
+        Test
+      variables: |
+        Foo: Bar
+        Fizz: Buzz  
+```
+
+## ✍️ Environment Variables
+
+| Name              | Description                                                                                                                                          |
+| :---------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OCTOPUS_URL`     | The base URL hosting Octopus Deploy (i.e. `https://octopus.example.com`). It is strongly recommended that this value retrieved from a GitHub secret. |
+| `OCTOPUS_API_KEY` | The API key used to access Octopus Deploy. It is strongly recommended that this value retrieved from a GitHub secret.                                |
+| `OCTOPUS_SPACE`   | The Name of a space within which this command will be executed.                                                                                      |
+
+## 📥 Inputs
+
+| Name                 | Description                                                                                                                                                                                                  |
+| :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `project`            | **Required.** The name of the project associated with this release.                                                                                                                                          |
+| `release_number`     | **Required.** The release number to deploy.                                                                                                                                                                  |
+| `environments`       | **Required.** The list of environment names to deploy to.                                                                                                                                                    |
+| `use_guided_failure` | Whether to use guided failure mode if errors occur during the deployment.                                                                                                                                    |
+| `variables`          | A multi-line list of prompted variable values. Format: name:value.                                                                                                                                           |
+| `server`             | The instance URL hosting Octopus Deploy (i.e. "https://octopus.example.com/"). The instance URL is required, but you may also use the OCTOPUS_URL environment variable.                                      |
+| `api_key`            | The API key used to access Octopus Deploy. An API key is required, but you may also use the OCTOPUS_API_KEY environment variable. It is strongly recommended that this value retrieved from a GitHub secret. |
+| `space`              | The name of a space within which this command will be executed. The space name is required, but you may also use the OCTOPUS_SPACE environment variable.                                                     |
+
+## 📤 Outputs
+
+| Name           | Description                                                                                                                                                                                                                              |
+| :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `server_tasks` | JSON array of objects containing the Octopus Deploy server tasks Ids (`serverTaskId`) and environment name (`environmentName`) for the executions tasks that were queued. Use the `await-task-action`to wait for any/all of these tasks. |
+
+## 🤝 Contributions
+
+Contributions are welcome! :heart: Please read our [Contributing Guide](.github/CONTRIBUTING.md) for information about how to get involved in this project.
 
 ## Privacy
 
