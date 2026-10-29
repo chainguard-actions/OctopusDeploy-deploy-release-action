@@ -14,6 +14,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | v4.2.5 | [`v4.2.5`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/tree/v4.2.5) | [`aa8dcdd`](https://github.com/OctopusDeploy/deploy-release-action/commit/aa8dcddeec810ce58cdf282a72738a8ed8ed65fd) | [`HARDENING.md`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/blob/v4.2.5/HARDENING.md) |
 | v4.2.6 | [`v4.2.6`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/tree/v4.2.6) | [`bc32326`](https://github.com/OctopusDeploy/deploy-release-action/commit/bc3232647d211396a7d81d82b8098da0635c182a) | [`HARDENING.md`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/blob/v4.2.6/HARDENING.md) |
 | v4.2.7 | [`v4.2.7`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/tree/v4.2.7) | [`e203e12`](https://github.com/OctopusDeploy/deploy-release-action/commit/e203e12b01b65e0e452dbfe0004112d4c051cfec) | [`HARDENING.md`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/blob/v4.2.7/HARDENING.md) |
+| v4.2.8 | [`v4.2.8`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/tree/v4.2.8) | [`18537a2`](https://github.com/OctopusDeploy/deploy-release-action/commit/18537a27317fbfabc10609a34e8452184da68dd0) | [`HARDENING.md`](https://github.com/chainguard-actions/OctopusDeploy-deploy-release-action/blob/v4.2.8/HARDENING.md) |
 
 ## Privacy
 
